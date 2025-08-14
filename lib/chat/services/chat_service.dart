@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat_plugin/chat/chat_bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../chat_bloc/event.dart';
@@ -94,5 +95,39 @@ class ChatSocketService {
 
   void disconnect() {
     socket.disconnect();
+  }
+
+  syncConversations(ChatTicket ticket, List? list) async {
+    if (list == null) return;
+    var messagesBox =
+        await Hive.openBox<ChatMessage>('chat_${ticket.userUuid}');
+    list.forEach((data) {
+      final createdAt =
+          DateTime.tryParse(data['created_at'] ?? '') ?? DateTime.now();
+      final msg = ChatMessage(
+        chatId: data['chat_id'],
+        senderType: data['sender_type'],
+        message: data['message'] ?? '',
+        attachmentsJson: data['attachments'] != null
+            ? jsonEncode(data['attachments'])
+            : null,
+        adminId: data['admin_id'],
+        userId: data['user_id'],
+        userUuid: data['user_uuid'],
+        businessId: data['business_id'],
+        timestamp: createdAt,
+      );
+
+      var msgId = "${data['id']}";
+      var message = data['message'];
+      final exists = messagesBox.values.any((m) {
+            return m.key == msgId;
+          }) ??
+          false;
+
+      if (!exists) {
+        messagesBox.put(msgId, message);
+      }
+    });
   }
 }

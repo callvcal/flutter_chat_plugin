@@ -58,23 +58,20 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onMessageReceived(ChatMessageReceived event, Emitter<ChatState> emit) {
-    // final exists = messagesBox?.values.any((m) {
-    //   return msgId != null
-    //       ? m.key == msgId
-    //       : (m.chatId == data['chat_id'] && m.timestamp == createdAt);
-    // }) ??
-    //     false;
-    //
-    // if (!exists) {
-    //
-    // }
+    var msgId = event.messageId;
+    final exists = messagesBox?.values.any((m) {
+          return m.key == msgId;
+        }) ??
+        false;
 
-    if (event.messageId != null) {
-      messagesBox?.put(event.messageId!, event.message);
-    } else {
-      messagesBox?.add(event.message);
+    if (!exists) {
+      if (event.messageId != null) {
+        messagesBox?.put(event.messageId!, event.message);
+      } else {
+        messagesBox?.add(event.message);
+      }
+      emit(state.copyWith(messages: messagesBox!.values.toList()));
     }
-    emit(state.copyWith(messages: messagesBox!.values.toList()));
   }
 
   Future<void> _onSendMessage(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_plugin/chat/services/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:hive/hive.dart';
@@ -88,6 +89,9 @@ class StartChatButton extends StatelessWidget {
         // Store in Hive
         final box = await Hive.openBox<ChatTicket>('chat_tickets');
         await box.put(ticketData["user_uuid"], chatTicket);
+
+        ChatSocketService()
+            .syncConversations(chatTicket, data['conversations']);
 
         Get.back(); // Close loading
 
