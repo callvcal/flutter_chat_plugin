@@ -185,6 +185,8 @@ class ChatPageConversations extends StatelessWidget {
         }
 
         return Column(
+          crossAxisAlignment:
+              isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (showDateSeparator) ...[
               Padding(
