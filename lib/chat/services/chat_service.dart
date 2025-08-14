@@ -119,14 +119,13 @@ class ChatSocketService {
       );
 
       var msgId = "${data['id']}";
-      var message = data['message'];
       final exists = messagesBox.values.any((m) {
             return m.key == msgId;
           }) ??
           false;
 
       if (!exists) {
-        messagesBox.put(msgId, message);
+        messagesBox.put(msgId, msg);
       }
     });
   }
