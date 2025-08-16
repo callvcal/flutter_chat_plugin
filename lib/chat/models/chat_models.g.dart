@@ -19,6 +19,7 @@ class ChatTicketAdapter extends TypeAdapter<ChatTicket> {
     return ChatTicket(
       userUuid: fields[0] as String?,
       appId: fields[1] as int?,
+      id: fields[15] as int?,
       userId: fields[2] as int?,
       userName: fields[3] as String?,
       userEmail: fields[4] as String?,
@@ -38,7 +39,7 @@ class ChatTicketAdapter extends TypeAdapter<ChatTicket> {
   @override
   void write(BinaryWriter writer, ChatTicket obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.userUuid)
       ..writeByte(1)
@@ -68,7 +69,9 @@ class ChatTicketAdapter extends TypeAdapter<ChatTicket> {
       ..writeByte(13)
       ..write(obj.businessId)
       ..writeByte(14)
-      ..write(obj.token);
+      ..write(obj.token)
+      ..writeByte(15)
+      ..write(obj.id);
   }
 
   @override

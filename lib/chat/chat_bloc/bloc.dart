@@ -24,7 +24,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Future<void> _onInit(ChatInit event, Emitter<ChatState> emit) async {
     ticket = event.ticket;
-    messagesBox = await Hive.openBox<ChatMessage>('chat_${ticket!.userUuid}');
+    messagesBox = await Hive.openBox<ChatMessage>('chat_${ticket!.id}');
     emit(state.copyWith(messages: messagesBox!.values.toList()));
 
     // Connect socket

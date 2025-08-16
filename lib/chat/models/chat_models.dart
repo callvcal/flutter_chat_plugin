@@ -52,10 +52,13 @@ class ChatTicket extends HiveObject {
   /// Local-only field: WebSocket token
   @HiveField(14)
   String? token;
+  @HiveField(15)
+  int? id;
 
   ChatTicket({
     this.userUuid,
     this.appId,
+    this.id,
     this.userId,
     this.userName,
     this.userEmail,
