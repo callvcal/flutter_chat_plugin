@@ -80,7 +80,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     emit(state.copyWith(isSending: true));
     final now = DateTime.now();
-    final tempKey = "temp_${now.microsecondsSinceEpoch}";
+    // final tempKey = "temp_${now.microsecondsSinceEpoch}";
 
     final optimisticMsg = ChatMessage(
       chatId: null,
@@ -94,7 +94,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       timestamp: now,
     );
 
-    messagesBox?.put(tempKey, optimisticMsg);
+    // messagesBox?.put(tempKey, optimisticMsg);
     emit(state.copyWith(messages: messagesBox!.values.toList()));
 
     try {
@@ -123,17 +123,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           timestamp: createdAt,
         );
 
-        messagesBox?.delete(tempKey);
+        // messagesBox?.delete(tempKey);
         if (msgId != null) {
           messagesBox?.put(msgId, confirmedMsg);
         } else {
-          messagesBox?.put(tempKey, confirmedMsg);
+          // messagesBox?.put(tempKey, confirmedMsg);
         }
       } else {
-        messagesBox?.delete(tempKey);
+        // messagesBox?.delete(tempKey);
       }
     } catch (e) {
-      messagesBox?.delete(tempKey);
+      // messagesBox?.delete(tempKey);
     }
 
     emit(state.copyWith(
