@@ -21,19 +21,21 @@ class StartChatButton extends StatelessWidget {
   final String? businessName;
   final String? userAddress;
   final String? secret;
+  final bool isAdmin;
 
-  const StartChatButton({
-    Key? key,
-    required this.appId,
-    required this.userId,
-    required this.businessId,
-    required this.userName,
-    required this.userEmail,
-    required this.userMobile,
-    required this.businessName,
-    required this.userAddress,
-    required this.secret,
-  }) : super(key: key);
+  const StartChatButton(
+      {Key? key,
+      required this.appId,
+      required this.userId,
+      required this.businessId,
+      required this.userName,
+      required this.userEmail,
+      required this.userMobile,
+      required this.businessName,
+      required this.userAddress,
+      required this.secret,
+      this.isAdmin = false})
+      : super(key: key);
 
   Future<void> _startChat(BuildContext context) async {
     Get.dialog(
@@ -41,6 +43,7 @@ class StartChatButton extends StatelessWidget {
       barrierDismissible: false,
     );
 
+    ChatSocketService().isAdmin = true;
     final url = Uri.parse("https://admin.callvcal.com/api/chat/token");
 
     try {
@@ -52,6 +55,7 @@ class StartChatButton extends StatelessWidget {
         },
         body: jsonEncode({
           "appId": appId,
+          'isAdmin': isAdmin,
           "userId": userId,
           "businessId": businessId,
           "user_name": userName,

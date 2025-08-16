@@ -12,8 +12,16 @@ import '../models/chat_models.dart';
 typedef ChatMessageCallback = void Function(Map<String, dynamic> message);
 
 class ChatSocketService {
+  // 👇 Singleton instance
+  static final ChatSocketService _instance = ChatSocketService._internal();
+
+  factory ChatSocketService() => _instance;
+
+  ChatSocketService._internal();
+
   late IO.Socket socket;
   ChatMessageCallback? onMessage;
+  bool isAdmin = false;
 
   handleFCM(Map data) {
     if (data['type'] == "callvcal-chat") {

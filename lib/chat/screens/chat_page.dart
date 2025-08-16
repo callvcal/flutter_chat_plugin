@@ -134,7 +134,7 @@ class ChatPage extends StatelessWidget {
   }
 }
 
-class ChatPageConversations extends StatelessWidget {
+class ChatPageConversations extends StatefulWidget {
   const ChatPageConversations({
     super.key,
     required this.messages,
@@ -143,21 +143,50 @@ class ChatPageConversations extends StatelessWidget {
   final List<ChatMessage> messages;
 
   @override
+  State<ChatPageConversations> createState() => _ChatPageConversationsState();
+}
+
+class _ChatPageConversationsState extends State<ChatPageConversations> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void didUpdateWidget(covariant ChatPageConversations oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Whenever messages change, scroll to bottom
+    if (widget.messages.length != oldWidget.messages.length) {
+      _scrollToBottom();
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Reverse messages so the latest is at the bottom
-    final sortedMessages = messages.toList()
+    // Sort so latest at bottom
+    final sortedMessages = widget.messages.toList()
       ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.symmetric(vertical: 10),
       itemCount: sortedMessages.length,
       itemBuilder: (context, index) {
         final msg = sortedMessages[index];
         final isMe = msg.senderType == 'user';
 
-        // Convert to local time
         final localTime = msg.timestamp.toLocal();
         final formattedTime = DateFormat('hh:mm a').format(localTime);
 
