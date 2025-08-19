@@ -22,6 +22,7 @@ class StartChatButton extends StatelessWidget {
   final String? userAddress;
   final String? secret;
   final bool isAdmin;
+  final bool showLabel;
 
   const StartChatButton(
       {Key? key,
@@ -34,6 +35,7 @@ class StartChatButton extends StatelessWidget {
       required this.businessName,
       required this.userAddress,
       required this.secret,
+      this.showLabel = true,
       this.isAdmin = false})
       : super(key: key);
 
@@ -119,6 +121,12 @@ class StartChatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!showLabel) {
+      return IconButton(
+        onPressed: () => _startChat(context),
+        icon: const Icon(Icons.support_agent, color: Colors.white),
+      );
+    }
     return TextButton.icon(
       onPressed: () => _startChat(context),
       icon: const Icon(Icons.support_agent, color: Colors.white),

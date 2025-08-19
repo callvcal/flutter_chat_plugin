@@ -8,15 +8,21 @@ import '../chat_bloc/state.dart';
 import '../models/chat_models.dart';
 import '../services/chat_service.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final ChatTicket ticket;
 
   const ChatPage({super.key, required this.ticket});
 
   @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ChatBloc(ChatSocketService())..add(ChatInit(ticket)),
+      create: (_) =>
+          ChatBloc(ChatSocketService())..add(ChatInit(widget.ticket)),
       child: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           final bloc = context.read<ChatBloc>();
@@ -30,8 +36,8 @@ class ChatPage extends StatelessWidget {
                   CircleAvatar(
                     backgroundColor: Colors.green.shade100,
                     child: Text(
-                      (ticket.businessName?.isNotEmpty ?? false)
-                          ? ticket.businessName![0].toUpperCase()
+                      (widget.ticket.businessName?.isNotEmpty ?? false)
+                          ? widget.ticket.businessName![0].toUpperCase()
                           : "S",
                       style: const TextStyle(color: Colors.green),
                     ),
@@ -40,7 +46,7 @@ class ChatPage extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(ticket.businessName ?? "Support",
+                      Text(widget.ticket.businessName ?? "Support",
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                       Row(
                         children: [
@@ -131,6 +137,12 @@ class ChatPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    ChatSocketService().disconnect();
   }
 }
 
