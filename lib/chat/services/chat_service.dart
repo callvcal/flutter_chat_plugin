@@ -107,8 +107,7 @@ class ChatSocketService {
 
   syncConversations(ChatTicket ticket, List? list) async {
     if (list == null) return;
-    var messagesBox =
-        await Hive.openBox<ChatMessage>('chat_${ticket.userUuid}');
+    var messagesBox = await Hive.openBox<ChatMessage>('chat_${ticket.id}');
     list.forEach((data) {
       final createdAt =
           DateTime.tryParse(data['created_at'] ?? '') ?? DateTime.now();
